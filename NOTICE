@@ -1,0 +1,40 @@
+# NOTICE
+
+This repository contains original research code and documentation by the
+php2shell research contributors. **All code in this tree is original,
+self-implemented p2s work** and is licensed under MIT (see LICENSE). No
+third-party exploit or vector code is included.
+
+## Original code (MIT)
+
+The FPM chains, profiles, calibration tools, lab configs and documentation in
+this repository are original work and are licensed under MIT.
+
+`src/p2s/` is the mod_php chain (warning + pure128). It is a self-implemented
+implementation written from documented behavior and our own lab measurements;
+no third-party code is imported or copied.
+
+## Related public research (no code copied)
+
+These public projects document related ideas. The implementations here are
+independent; nothing is fetched, imported or copied from them:
+
+- <https://github.com/kengwang/php2shell-fpm-exp> - FPM chain idea credited;
+- <https://github.com/cbovin/php2shell-poc> - offset values cross-checked
+  against its public lab; the profile code is ours;
+- <https://github.com/VABISMO/php2shell-nginx-fpm-full-rce> (MIT) - 8M reclaim
+  endgame idea credited; the lab pages keep their MIT license;
+- <https://github.com/devploit/php2shell> (MIT) - research-release structure
+  credited.
+
+## PHP2Shell disclosure
+
+The vulnerability research originates from Wiz Research:
+<https://www.wiz.io/blog/php2shell-php-rce>.
+CVE-2026-109618 / CVE-2026-109619 were fixed in PHP 8.2.35, 8.3.36, 8.4.27 and
+8.5.12.
+
+## No warranty / no authorization
+
+The licenses grant copyright permissions only. They do not authorize testing
+any system. See ACCEPTABLE_USE.md and SECURITY.md.

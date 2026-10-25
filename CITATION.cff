@@ -1,0 +1,31 @@
+cff-version: 1.2.0
+message: "If you use this research, cite the repository and the original PHP2Shell disclosure."
+title: "PHP2Shell Research: FPM chains, calibration and field notes"
+version: "2026-10-26"
+date-released: 2026-10-26
+license: MIT
+type: software
+authors:
+  - name: "eosrce"
+repository-code: "https://github.com/eosrce/php2shell-research"
+keywords:
+  - php
+  - php-fpm
+  - php2shell
+  - CVE-2026-109618
+  - CVE-2026-109619
+  - security-research
+references:
+  - type: article
+    title: "PHP2Shell: pre-auth RCE in PHP"
+    authors:
+      - name: "Wiz Research"
+    url: "https://www.wiz.io/blog/php2shell-php-rce"
+  - type: software
+    title: "VABISMO/php2shell-nginx-fpm-full-rce"
+    url: "https://github.com/VABISMO/php2shell-nginx-fpm-full-rce"
+    license: MIT
+  - type: software
+    title: "devploit/php2shell"
+    url: "https://github.com/devploit/php2shell"
+    license: MIT

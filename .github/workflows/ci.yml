@@ -1,0 +1,31 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Unit tests
+        run: python -m unittest discover -s tests -v
+      - name: Layout smoke tests
+        run: |
+          python src/tools/fpm_chain_smoke.py
+          python src/tools/fpm_reclaim_smoke.py
+      - name: Compile
+        run: python -m py_compile $(find src tests -name '*.py')
+      - name: License boundary check
+        run: |
+          test -f LICENSE
+          test -f NOTICE
+          test ! -f src/exploit.py
+          grep -q "self-implemented" NOTICE

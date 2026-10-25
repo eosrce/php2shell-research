@@ -1,0 +1,33 @@
+# Ignore lab/runtime artifacts and large binaries.
+__pycache__/
+*.pyc
+*.pyo
+.DS_Store
+.env
+.venv/
+venv/
+
+# runtime output / proofs
+out/
+logs/
+proof/
+*.proof
+sess_*
+*.session
+
+# large or downloaded artifacts
+*.7z
+*.tar.gz
+*.tgz
+*.zip
+vendor/
+src/php-8.4.26/
+labs/runtime/
+labs/**/runtime/
+code.7z
+php2shell-fork.7z
+
+# generated evidence
+verify-matrix*.csv
+*.gdb.out
+*.out

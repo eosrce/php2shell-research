@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "php2shell-research"
+version = "2026.10.26"
+description = "PHP2Shell FPM research: 128M deterministic chain and 8M reclaim toolkit"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [{name = "php2shell research contributors"}]
+keywords = ["php", "php-fpm", "php2shell", "CVE-2026-109619", "security-research"]
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Security",
+]
+
+[tool.setuptools]
+packages = []
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"

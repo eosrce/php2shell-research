@@ -1,0 +1,127 @@
+# gate-family cross-branch regression (VM, 2026-10-31)
+# NOTE: smoke, 1 run per case -- NOT a 3x gate re-validation. Full crossbranch
+#       (3x per case) deferred to the next round per Lead timebox.
+# scope: the 6 registered gate cases (1w + 4w) and their 4 positive controls.
+# source of truth: verify_matrix.py --only <case>; direct gate4w runners for the
+# closed signatures (matrix prints only the PASS line); raw logs on the VM in
+# /tmp/r11_matrix_*.log, /tmp/r11_direct_*.log, /tmp/r11_ctrl_*.log.
+# containers were already running; no container/image/setup changes were made.
+
+## matrix runs (python3 tools/verify_matrix.py --only <case>)
+case,matrix_verdict,matrix_rc,matrix_wall_s,runner_elapsed_s,detail
+fpm-8512-gate,PASS,0,192,69.8,patch gate closed (patched build not exploitable)
+fpm-8512-gate-4w,PASS,0,112,112.2,patch gate closed (patched build not exploitable)
+fpm-8235-gate,PASS,0,173,72.1,patch gate closed (patched build not exploitable)
+fpm-8235-gate-4w,PASS,0,99,99.3,patch gate closed (patched build not exploitable)
+fpm-8336-gate-4w,PASS,0,100,99.9,patch gate closed (patched build not exploitable)
+fpm-8427-gate-4w,PASS,0,100,99.4,patch gate closed (patched build not exploitable)
+# note: matrix_wall_s includes matrix-side setup/cleanup; runner_elapsed_s is the
+# case-runner measured gate time (from out/verify-matrix.csv).
+
+## direct gate signatures (GDB_BG=1; pin mode, sleepers_alive=3/3 at stage)
+case,rc,direct_s,grow,prime,sr1,sr2a,sr2ak2,i0_2a,i0_2ak2,xphp,uid,bg_levels,pincheck,page_sha,token
+fpm-8512-gate,0,69,7050470,500/0B,469,374,724,0,0,MISSING,no,all0@+0x370,NA,ca83aff9...,PATCH GATE: closed exit 0
+fpm-8512-gate-4w,0,94,7050470,500/0B,469,374,724,0,0,MISSING,no,all0@+0x370,PINCHECK free_pid=11 levels[...]=[11:0/0/0 ...],ca83aff9...,PATCH GATE: closed exit 0
+fpm-8235-gate,0,64,7048390,500/0B,456,361,698,0,0,MISSING,no,all0@+0x358,NA,ca83aff9...,PATCH GATE: closed exit 0
+fpm-8235-gate-4w,0,94,7048390,500/0B,456,361,698,0,0,MISSING,no,all0@+0x358,PINCHECK free_pid=12 levels[...]=[11:0/0/0 ...],ca83aff9...,PATCH GATE: closed exit 0
+fpm-8336-gate-4w,0,93,7048390,500/0B,456,361,698,0,0,MISSING,no,all0@+0x360,PINCHECK free_pid=11 levels[...]=[11:0/0/0 ...],ca83aff9...,PATCH GATE: closed exit 0
+fpm-8427-gate-4w,0,93,7050470,500/0B,469,374,724,0,0,MISSING,no,all0@+0x370,PINCHECK free_pid=11 levels[...]=[11:0/0/0 ...],ca83aff9...,PATCH GATE: closed exit 0
+
+## positive controls (direct gate4w runner, GDB_BG=1, require OPEN exit 3)
+case,rc,direct_s,sr2a,sr2ak2,xphp,uid,bg_levels,token
+fpm-8511-4w,3,93,47,70,392,yes,+0x370=1@free (11:0/0/1),PATCH GATE: OPEN (expected on vulnerable) exit 3
+fpm-8234-4w,3,92,47,70,392,yes,+0x358=1@free (11:1/0/0),PATCH GATE: OPEN (expected on vulnerable) exit 3
+fpm-8335-4w,3,93,47,70,392,yes,+0x360=1@free (11:<data-lo>/1/0),PATCH GATE: OPEN (expected on vulnerable) exit 3
+fpm-8426-4w,3,93,47,70,392,yes,+0x370=1@free (11:0/0/1),PATCH GATE: OPEN (expected on vulnerable) exit 3
+
+## page sha (runtime-installed /srv/www/_r41prime2.php, all 10 containers)
+container,sha256
+p2s-fpm8512-128,ca83aff9fe0a0fd8400901a41f366746afe61dc627c7f4a767dff5139ce41829
+p2s-gate8512-4w,ca83aff9fe0a0fd8400901a41f366746afe61dc627c7f4a767dff5139ce41829
+p2s-fpm8235-128,ca83aff9fe0a0fd8400901a41f366746afe61dc627c7f4a767dff5139ce41829
+p2s-gate8235-4w,ca83aff9fe0a0fd8400901a41f366746afe61dc627c7f4a767dff5139ce41829
+p2s-gate8336-4w,ca83aff9fe0a0fd8400901a41f366746afe61dc627c7f4a767dff5139ce41829
+p2s-gate8427-4w,ca83aff9fe0a0fd8400901a41f366746afe61dc627c7f4a767dff5139ce41829
+p2s-gate8511-4w,ca83aff9fe0a0fd8400901a41f366746afe61dc627c7f4a767dff5139ce41829
+p2s-gate8234-4w,ca83aff9fe0a0fd8400901a41f366746afe61dc627c7f4a767dff5139ce41829
+p2s-gate8335-4w,ca83aff9fe0a0fd8400901a41f366746afe61dc627c7f4a767dff5139ce41829
+p2s-gate8426-4w,ca83aff9fe0a0fd8400901a41f366746afe61dc627c7f4a767dff5139ce41829
+
+## branch table
+branch,gate_case,gate_image,closed_SR,control_case,control_image,control_SR,gate_BG_field,control_BG
+8.5,fpm-8512-gate-4w,d06afa5c...,469->374->724,fpm-8511-4w,502117d6...,47/70,+0x370,+0x370=1@free
+8.2,fpm-8235-gate-4w,ac855a04...,456->361->698,fpm-8234-4w,386870e3...,47/70,+0x358,+0x358=1@free
+8.3,fpm-8336-gate-4w,b229bcfd...,456->361->698,fpm-8335-4w,e5a7b81f...,47/70,+0x360,+0x360=1@free
+8.4,fpm-8427-gate-4w,26ba8279...,469->374->724,fpm-8426-4w,6658d56c...,47/70,+0x370,+0x370=1@free
+
+## summary
+matrix_gate_pass=6/6
+direct_gate_closed=6/6
+control_open=4/4
+anomalies=none
+total_matrix_runner_elapsed_s=553.1 (sum of runner_elapsed_s)
+total_direct_gate_s=507
+total_control_s=371
+
+## post-round hardening (r41_patch_gate4w.sh sha 4a94d199... ; see fpm8427 report section 8)
+# matrix --only fpm-8512-gate-4w,fpm-8235-gate-4w,fpm-8336-gate-4w,fpm-8427-gate-4w
+fpm-8512-gate-4w,PASS,96.1s,rc=0
+fpm-8235-gate-4w,PASS,94.9s,rc=0
+fpm-8336-gate-4w,PASS,94.5s,rc=0
+fpm-8427-gate-4w,PASS,94.4s,rc=0
+# negatives: GDB_BG=0 -> exit2 "PATCH GATE: ERROR (BG unverified)"; SLEEP_T=1 -> exit2 sleepers=0/3
+# control: fpm-8426-4w -> exit3 OPEN expected (47/70, x.php 392B, uid=33, BG +0x370=1@free)
+# logs: /tmp/r11h_matrix.log /tmp/r11h_bg0.log /tmp/r11h_sleep.log /tmp/r11h_ctl.log
+
+## FULL 3x re-validation after hardening (script sha 4a94d199, wrapper sha d4b064fa; 2026-10-31)
+# methodology: 1w gates via direct fpm8512_gate_case.py (matrix --only is a
+#   SUBSTRING match: "--only fpm-8512-gate" also matches fpm-8512-gate-4w and
+#   would run two matrices against the same container); 4w gates via matrix
+#   --only <unique 4w name>; controls via direct gate4w runner. Two groups in
+#   parallel on disjoint containers; each run retried at most once on failure
+#   (all completed on attempt 1). Raw logs: /tmp/cb3_*.log, /tmp/cb3_gates.log,
+#   /tmp/cb3_ctl.log.
+case,round,verdict,rc,wall_s,attempts,method
+fpm-8512-gate,r1,PASS,0,90,1,direct-1w
+fpm-8512-gate,r2,PASS,0,91,1,direct-1w
+fpm-8512-gate,r3,PASS,0,92,1,direct-1w
+fpm-8235-gate,r1,PASS,0,95,1,direct-1w
+fpm-8235-gate,r2,PASS,0,96,1,direct-1w
+fpm-8235-gate,r3,PASS,0,91,1,direct-1w
+fpm-8512-gate-4w,r1,PASS,0,133,1,matrix
+fpm-8512-gate-4w,r2,PASS,0,129,1,matrix
+fpm-8512-gate-4w,r3,PASS,0,134,1,matrix
+fpm-8235-gate-4w,r1,PASS,0,139,1,matrix
+fpm-8235-gate-4w,r2,PASS,0,108,1,matrix
+fpm-8235-gate-4w,r3,PASS,0,104,1,matrix
+fpm-8336-gate-4w,r1,PASS,0,103,1,matrix
+fpm-8336-gate-4w,r2,PASS,0,104,1,matrix
+fpm-8336-gate-4w,r3,PASS,0,102,1,matrix
+fpm-8427-gate-4w,r1,PASS,0,102,1,matrix
+fpm-8427-gate-4w,r2,PASS,0,103,1,matrix
+fpm-8427-gate-4w,r3,PASS,0,102,1,matrix
+# gate summary: closed 6/6 cases x 3/3 = 18/18 PASS (rc=0, PATCH GATE: closed;
+#   4w matrix CSV rows e.g. fpm-8427-gate-4w,gate,PASS,0,101.8)
+# 1w direct signatures: fpm-8512-gate sr1=469B sr2a=374B sr2ak2=724B
+#   sp=7050470B xphp=MISSING judge='File not found.' bg_level=0 health=200;
+#   fpm-8235-gate sr1=456B sr2a=361B sr2ak2=698B sp=7048390B (same rest)
+# 4w closed signature (from smoke direct run, same chain; hardening only adds
+#   assertions): 8512/8427 grow=7050470 SR 469->374->724; 8235/8336 grow=7048390
+#   SR 456->361->698; i0=0, x.php MISSING, no uid, BG all 0.
+control,round,verdict,rc,wall_s,attempts,sr2a,sr2ak2,xphp,uid,bg
+fpm-8511-4w,r1,OPEN,3,133,1,47,70,392B,yes,+0x370=1@free
+fpm-8511-4w,r2,OPEN,3,130,1,47,70,392B,yes,+0x370=1@free
+fpm-8511-4w,r3,OPEN,3,131,1,47,70,392B,yes,+0x370=1@free
+fpm-8234-4w,r1,OPEN,3,124,1,47,70,392B,yes,+0x358=1@free
+fpm-8234-4w,r2,OPEN,3,126,1,47,70,392B,yes,+0x358=1@free
+fpm-8234-4w,r3,OPEN,3,133,1,47,70,392B,yes,+0x358=1@free
+fpm-8335-4w,r1,OPEN,3,134,1,47,70,392B,yes,+0x360=1@free
+fpm-8335-4w,r2,OPEN,3,133,1,47,70,392B,yes,+0x360=1@free
+fpm-8335-4w,r3,OPEN,3,131,1,47,70,392B,yes,+0x360=1@free
+fpm-8426-4w,r1,OPEN,3,124,1,47,70,392B,yes,+0x370=1@free
+fpm-8426-4w,r2,OPEN,3,127,1,47,70,392B,yes,+0x370=1@free
+fpm-8426-4w,r3,OPEN,3,132,1,47,70,392B,yes,+0x370=1@free
+# control summary: 4/4 cases x 3/3 = 12/12 OPEN expected exit3; all
+#   sleepers_alive=3/3; grow same-family (8512/8426=7050470, 8234/8335=7048390)
+# aggregate: gates 18/18 PASS, controls 12/12 OPEN, retries 0, anomalies=none
+

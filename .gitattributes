@@ -1,0 +1,7 @@
+# Keep line endings identical on every platform so the sha256 values in
+# MANIFEST.md match a fresh checkout.
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.gif binary
+*.7z binary

